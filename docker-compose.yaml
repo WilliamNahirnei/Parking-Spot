@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  # mysql:
+  #   container_name: ecoguias_db
+  #   image: mysql:8
+  #   volumes:
+  #     - ./db/MySQL:/var/lib/mysql
+  #   ports:
+  #     - 3576:3306
+  #   restart: always
+  #   environment:
+      # MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+  #     MYSQL_DATABASE: ${DB_DATABASE}
+
+  pgsql:
+    container_name: parking_control_db_pgsql
+    image: postgres:12-alpine
+    volumes: 
+      - ./dbPGSQL/PgSQL:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
