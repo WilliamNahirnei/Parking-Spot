@@ -1,28 +1,24 @@
-package com.api.parkingcontrol.service;
+package com.api.parkingcontrol.ParkingSpot;
 
-import com.api.parkingcontrol.model.ParkingSpotModel;
-import com.api.parkingcontrol.repository.ParkingSpotRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class ParkingSpotService {
 
-    final ParkingSpotRepository parkingSpotRepository;
+    final com.api.parkingcontrol.ParkingSpot.ParkingSpotRepository parkingSpotRepository;
 
     public ParkingSpotService(ParkingSpotRepository parkingSpotRepository) {
         this.parkingSpotRepository = parkingSpotRepository;
     }
 
     @Transactional
-    public ParkingSpotModel save(ParkingSpotModel parkingSpotModel) {
+    public com.api.parkingcontrol.ParkingSpot.ParkingSpotModel save(com.api.parkingcontrol.ParkingSpot.ParkingSpotModel parkingSpotModel) {
         return parkingSpotRepository.save(parkingSpotModel);
     }
 
@@ -38,11 +34,11 @@ public class ParkingSpotService {
         return parkingSpotRepository.existsByApartmentAndBlock(apartment, block);
     }
 
-    public Page<ParkingSpotModel> findAll(Pageable pageable) {
+    public Page<com.api.parkingcontrol.ParkingSpot.ParkingSpotModel> findAll(Pageable pageable) {
         return parkingSpotRepository.findAll(pageable);
     }
 
-    public Optional<ParkingSpotModel> findById(UUID id) {
+    public Optional<com.api.parkingcontrol.ParkingSpot.ParkingSpotModel> findById(UUID id) {
         return parkingSpotRepository.findById(id);
     }
 

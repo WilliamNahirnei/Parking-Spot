@@ -1,8 +1,5 @@
-package com.api.parkingcontrol.controller;
+package com.api.parkingcontrol.ParkingSpot;
 
-import com.api.parkingcontrol.DTOs.ParkingSpotDTO;
-import com.api.parkingcontrol.model.ParkingSpotModel;
-import com.api.parkingcontrol.service.ParkingSpotService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,6 +74,6 @@ public class ParkingSpotController {
         if (!parkingSpotModelOptional.isPresent())
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found");
         parkingSpotService.delete(parkingSpotModelOptional.get());
-        return ResponseEntity.status(204).body("Parking Spot deleted with Successfully");
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Parking Spot deleted with Successfully");
     }
 }
