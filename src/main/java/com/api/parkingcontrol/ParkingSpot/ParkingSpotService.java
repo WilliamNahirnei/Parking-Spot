@@ -1,10 +1,13 @@
 package com.api.parkingcontrol.ParkingSpot;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,7 +21,10 @@ public class ParkingSpotService {
     }
 
     @Transactional
-    public com.api.parkingcontrol.ParkingSpot.ParkingSpotModel save(com.api.parkingcontrol.ParkingSpot.ParkingSpotModel parkingSpotModel) {
+    public ParkingSpotModel save(ParkingSpotDTO parkingSpotDTO) {
+        var parkingSpotModel = new ParkingSpotModel();
+        BeanUtils.copyProperties(parkingSpotDTO, parkingSpotModel);
+        parkingSpotModel.setRegistrationDate(LocalDateTime.now(ZoneId.of("UTC")));
         return parkingSpotRepository.save(parkingSpotModel);
     }
 
