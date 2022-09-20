@@ -53,16 +53,20 @@ public class ParkingSpotService {
         return parkingSpotRepository.existsByApartmentAndBlock(apartment, block);
     }
 
-    public Page<com.api.parkingcontrol.ParkingSpot.ParkingSpotModel> findAll(Pageable pageable) {
+    public Page<ParkingSpotModel> findAll(Pageable pageable) {
         return parkingSpotRepository.findAll(pageable);
     }
 
-    public Optional<com.api.parkingcontrol.ParkingSpot.ParkingSpotModel> findById(UUID id) {
-        return parkingSpotRepository.findById(id);
+    public ParkingSpotModel findById(UUID id) throws ValidationException {
+        Optional <ParkingSpotModel> parkingSpotModelOptional = parkingSpotRepository.findById(id);
+        if (!parkingSpotModelOptional.isPresent())
+            throw new ValidationException("Parking Spot not found", HttpStatus.NOT_FOUND.value(), "Parking Spot not Found");
+        return parkingSpotModelOptional.get();
     }
 
     @Transactional
-    public void delete(ParkingSpotModel parkingSpotModel) {
-        parkingSpotRepository.delete(parkingSpotModel);
+    public void delete(UUID id) throws ValidationException {
+        ParkingSpotModel parkingSpot = this.findById(id);
+        parkingSpotRepository.delete(parkingSpot);
     }
 }

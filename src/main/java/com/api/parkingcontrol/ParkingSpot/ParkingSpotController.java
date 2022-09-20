@@ -45,10 +45,15 @@ public class ParkingSpotController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getParkingSpotById(@PathVariable(value = "id") UUID id){
-        Optional <ParkingSpotModel> parkingSpotModelOptional = parkingSpotService.findById(id);
-        if (!parkingSpotModelOptional.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found");
-        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotModelOptional.get());
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findById(id));
+        }
+        catch (ValidationException e){
+            return ResponseEntity.status(e.getHttpCode()).body(e.getValidationMessage());
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
     }
 
 //    @PutMapping("/{id}")
@@ -67,10 +72,15 @@ public class ParkingSpotController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id){
-        Optional <ParkingSpotModel> parkingSpotModelOptional = parkingSpotService.findById(id);
-        if (!parkingSpotModelOptional.isPresent())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found");
-        parkingSpotService.delete(parkingSpotModelOptional.get());
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Parking Spot deleted with Successfully");
+        try{
+            parkingSpotService.delete(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Parking Spot deleted with Successfully");
+        }
+        catch (ValidationException e){
+            return ResponseEntity.status(e.getHttpCode()).body(e.getValidationMessage());
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
     }
 }
