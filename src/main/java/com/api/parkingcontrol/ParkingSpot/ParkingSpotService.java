@@ -65,6 +65,13 @@ public class ParkingSpotService {
     }
 
     @Transactional
+    public ParkingSpotModel upddate(UUID id, ParkingSpotDTO parkingSpotDTO) throws ValidationException {
+        ParkingSpotModel parkingSpot = this.findById(id);
+        BeanUtils.copyProperties(parkingSpotDTO, parkingSpot);
+        return parkingSpotRepository.save(parkingSpot);
+    }
+
+    @Transactional
     public void delete(UUID id) throws ValidationException {
         ParkingSpotModel parkingSpot = this.findById(id);
         parkingSpotRepository.delete(parkingSpot);
