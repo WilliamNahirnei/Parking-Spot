@@ -10,10 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.api.parkingcontrol.utils.exception.ValidationException;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -27,15 +27,15 @@ public class ParkingSpotController {
 
     @PostMapping
     public ResponseEntity<Object> saveSpot(@RequestBody @Valid ParkingSpotDTO parkingSpotDTO) {
-
-        if (parkingSpotService.existsByLicensePlateCar(parkingSpotDTO.getLicensePlateCar()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License plate car is already in use");
-        if (parkingSpotService.existsByParkingSpotNumber(parkingSpotDTO.getParkingSpotNumber()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking spot is already in use");
-        if (parkingSpotService.existsByApartmentAndBlock(parkingSpotDTO.getApartment(), parkingSpotDTO.getBlock()))
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking spot already registered in this apartment and block");
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotDTO));
+        try{
+            return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotDTO));
+        }
+        catch (ValidationException e){
+            return ResponseEntity.status(e.getHttpCode()).body(e.getValidationMessage());
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        }
     }
 
     @GetMapping
